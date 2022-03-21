@@ -1,0 +1,49 @@
+/* Sets the font of the places app  */
+body {
+    font: 100% arial, sans-serif;
+    background-color: #FAF0E6;
+
+}
+
+/* Sets up the map element */
+#mapid { height: 800px;
+          width: 800px;
+          padding-top: 30px;
+          padding-bottom: 30px;
+          float: left;
+        }
+
+div {
+    text-indent: 7px;
+    margin: 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    float: left;
+}
+
+/* Sets the prevous city names to different to allow for them stand out
+and allow for colour change when hovering over them */
+.locationN {
+    color: #006400;
+}
+
+.locationN:hover {
+  color: #B22222;
+}
+
+/* Sets the other specific div ellements to be set out the right way*/
+
+div#userInput {
+  display: block;
+}
+
+div#results {
+  float: none;
+}
+
+div#search {
+  display: block;
+  float: none;
+}
