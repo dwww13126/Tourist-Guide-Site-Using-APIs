@@ -1,25 +1,89 @@
+.container {
+  display: flex;
+  justify-content: left;
+}
+
+.info-grid {
+  display: grid;
+  /* Sets up the template for fitting the "Profile:" info */
+  grid-template-areas:
+          "Search Search Search Title Title"
+          "Cur Cur Cur Cur Max-Temp"
+          "Sun Sun Sun Sun Min-Temp"
+          "Map Map Map Map Recent-L"
+          "Map Map Map Map Recent"
+          "Map Map Map Map Recent";
+  grid-template-columns: 200px 200px 200px 200px 200px;
+  grid-template-rows: auto auto auto 40px 180px 180px;
+  grid-gap: 0px;
+  text-align: left;
+  font-size: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.title {
+  grid-area: Title;
+}
+
+.search {
+  grid-area: Search;
+}
+
+.cur {
+  grid-area: Cur;
+}
+
+
+.max-temp {
+  grid-area: Max-Temp;
+}
+
+.sun {
+  grid-area: Sun;
+}
+
+.min-temp {
+  grid-area: Min-Temp;
+}
+
+.map {
+  grid-area: Map;
+  display: flex;
+}
+
+.recent-L {
+  grid-area: Recent-L;
+}
+
+.recent {
+  grid-area: Recent;
+}
+
+#locationField {
+  width: auto;
+}
+
 /* Sets the font of the places app  */
 body {
     font: 100% arial, sans-serif;
-    background-color: #FAF0E6;
 
 }
 
 /* Sets up the map element */
-#mapid { height: 800px;
-          width: 800px;
+#mapid { height: auto;
+          width: auto;
           padding-top: 30px;
           padding-bottom: 30px;
           float: left;
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+          border-radius: 25px;
+          margin: 8px
         }
 
 div {
     text-indent: 7px;
     margin: 0px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
     float: left;
 }
 
@@ -37,10 +101,6 @@ and allow for colour change when hovering over them */
 
 div#userInput {
   display: block;
-}
-
-div#results {
-  float: none;
 }
 
 div#search {

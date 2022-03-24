@@ -11,23 +11,22 @@
     <script type="text/javascript" src="places.js"></script>
   </head>
   <body onload="initializeMap();">
-  	<h1>Which town would you like to visit?:</h1>
-    <div>
-      <!--Sets where the Map is created on the page -->
-      <div id="mapid"></div>
-      <div id="userInput">
-        <input type="text" id="locationField" value=""/>
-        <button onclick="geocodeLocation();">Submit</button>
+    <div class="container">
+      <div class="info-grid">
+        <div class="title" id="title"><p>Where would you like to travel:</p></div>
+        <div class="search" id="userInput">
+          <input type="text" id="locationField" value=""/>
+          <button onclick="geocodeLocation();">Submit</button>
+        </div>
+        <div class="cur" id="curWeather"></div>
+        <div class="max-temp" id="max-temp"></div>
+        <div class="sun" id="sunTimes"></div>
+        <div class="min-temp" id="min-temp"></div>
+        <!--Sets where the Map is created on the page -->
+        <div class="map" id="mapid"></div>
+        <div class="recent-L"><p>Recent Searches:</p></div>
+        <div class="recent" id="recSearch"></div>
       </div>
-      <div id="search">
-        <h2>Recent Searches:</h2>
-        <div id="recSearch"></div>
-      </div>
-    </div>
-    <div id="results">
-      <!-- Divs which Allows for the user to be informed of results -->
-      <div id="sunTimes"></div>
-      <div id="curWeather"></div>
     </div>
   </body>
 

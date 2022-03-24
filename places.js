@@ -178,10 +178,15 @@ function showWeather(responseT){
 	//Sets the div to contain the text which shows the weather
 	let weatherMessageDiv = document.getElementById("curWeather");
 	weatherMessageDiv.innerHTML = '';
-	let weatherMessageH = document.createElement("H3");
-	let weatherMessageH_2 = document.createElement("H3");
-	let weatherMessage;
-	let weatherMessage2;
+	let curH = document.createElement("H3");
+	let maxTempH = document.createElement("H3");
+	let minTempH = document.createElement("H3");
+	let curText;
+	let maxTempText;
+	let minTempText;
+	let maxTempElement = document.getElementById("max-temp");
+	let minTempElement = document.getElementById("min-temp");
+	let curWeatherElement = document.getElementById("curWeather");
 	//Checks to see if the request was successful by making sure that there are
 	//no error code messages before performing the operations
 	let errorCode = xmlWeather.getElementsByTagName("cod");
@@ -192,28 +197,34 @@ function showWeather(responseT){
 		let tMin = xmlWeather.getElementsByTagName("temperature")[0].getAttribute("min");
 		let tMax = xmlWeather.getElementsByTagName("temperature")[0].getAttribute("max");
 		//Creates the weather message
-		weatherMessage = document.createTextNode("Current weather is " + weather +
+		curText = document.createTextNode("Current weather is " + weather +
 		" with a " + wind);
-		weatherMessage2 = document.createTextNode("Max temp: " + tMax + "°C Max temp: " + tMin + "°C");
+		maxTempText = document.createTextNode("Max temp: " + tMax + "°C");
+		minTempText =  document.createTextNode("Max temp: " + tMin + "°C");
 		//Show the location on the map
 		let lat = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lat");
 		let lon = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lon");
 		showOnMap(lat, lon);
 	}
 	//Otherwise let the user know that the weather could not be requested by
-	//altering the weatherMessage
+	//altering the curText
 	else {
-		weatherMessage = document.createTextNode("Error requesting weather information");
-		weatherMessage2 = document.createTextNode("");
+		curText = document.createTextNode("Error requesting weather information");
+		maxTempText = document.createTextNode("");
+		minTempText = document.createTextNode("");
 	}
-	//Clears the ellements from the weatherMessage DOM
-	weatherMessageDiv.InnerHTML = "";
-	//appends the created message to
-	weatherMessageH.appendChild(weatherMessage);
-	weatherMessageH_2.appendChild(weatherMessage2);
-	weatherMessageDiv.appendChild(weatherMessageH);
-	weatherMessageDiv.appendChild(weatherMessageH_2);
-
+	//appends the created message to the H tags
+	curH.appendChild(curText);
+	maxTempH.appendChild(maxTempText);
+	minTempH.appendChild(minTempText);
+	//Clears each of the ellements orignal content
+	curWeatherElement.innerHTML = "";
+	maxTempElement.innerHTML = "";
+	minTempElement.innerHTML = "";
+	//Appends the H tags to the relevent ellements on the page
+	curWeatherElement.appendChild(curH);
+	maxTempElement.appendChild(maxTempH);
+	minTempElement.appendChild(minTempH);
 }
 
 //Method used to show the location through the Geocoded data received back from
@@ -244,12 +255,18 @@ function showSunTimes(responseT, townName){
 	//Deletes the irrelevent parts of the date to only show the time with AM / PM
 	let sRiseNZ = nzDateRise.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 	let sSetNZ = nzDateSet.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-	//Gets the "sunTimes" div which needs to be updated
+	//Gets the sunTimes and title divs which needs to be updated and clears them
 	let sunTimeDiv = document.getElementById("sunTimes");
-	//Creates and adds the message ellement to the sunTimeDiv
+	let titleDiv = document.getElementById("title");
+	sunTimeDiv.innerHTML = "";
+	titleDiv.innerHTML = "";
+	//Creates and adds the message ellement to the sunTimeDiv and titleDiv
 	let sunTimeMessageH = document.createElement("H3");
+	let townTitleH = document.createElement("H2");
 	let sunText = document.createTextNode(townName + " currently: Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
+	let townText = document.createTextNode(townName);
 	sunTimeMessageH.appendChild(sunText);
-	sunTimeDiv.innerHTML = '';
+	townTitleH.appendChild(townText);
 	sunTimeDiv.appendChild(sunTimeMessageH);
+	titleDiv.appendChild(townTitleH);
 }
