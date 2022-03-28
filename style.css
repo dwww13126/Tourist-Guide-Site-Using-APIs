@@ -1,3 +1,8 @@
+div {
+    text-indent: 7px;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 .container {
     display: flex;
@@ -11,8 +16,8 @@
           "Map Map Map Map Recent-L"
           "Map Map Map Map Recent"
           "Map Map Map Map Recent"
-          "Sun Sun Sun Sun Max-Temp"
-          "Cur Cur Cur Cur Min-Temp";
+          "Cur Cur Cur Max-Temp Max-Temp"
+          "Sun Sun Sun Min-Temp Min-Temp";
   grid-template-columns: 200px 200px 200px 200px 200px;
   grid-template-rows: 40px 40px 180px 180px auto auto;
   grid-gap: 0px;
@@ -66,14 +71,48 @@
 .info-grid > .recent {
   grid-area: Recent;
   display: block;
+  padding-left: 10px;
 }
 
-/* Sets the font of the places app  */
-p {
-  font-family: Arial, Helvetica, sans-serif;
+/* An animation for when a user is hovering over a recent town name */
+@keyframes highlightAndMove {
+  from {
+    color: black;
+    transform: translateX(0px);
+   }
+   to {
+     color: green;
+     transform: translateX(-5px);
+  }
 }
 
-/* Sets up the map element */
+/* An animation for when a user has stopped hovering over a recent town name
+   or when the ordering of the recent town names have changed */
+@keyframes unhighlightAndReturn {
+  from {
+    color: green;
+    transform: translateX(-5px);
+   }
+   to {
+     color: black;
+     transform: translateX(0px);
+  }
+}
+
+.locationN:hover {
+  animation-name: highlightAndMove;
+  animation-duration: 1s;
+  color: green;
+  transform: translateX(-5px);
+  cursor: pointer;
+}
+
+.locationN {
+  position: relative;
+  animation-name: unhighlightAndReturn;
+  animation-duration: 0.25s;
+}
+/* Sets up the map element for showing the towns searched by the user */
 #mapid { height: auto;
           width: auto;
           padding-top: 30px;
@@ -82,25 +121,7 @@ p {
           box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
           border-radius: 25px;
           margin: 8px
-        }
-
-div {
-    text-indent: 7px;
-    margin: 0px;
 }
-
-/* Sets the prevous city names to different to allow for them stand out
-and allow for colour change when hovering over them */
-.locationN {
-    color: #006400;
-}
-
-.locationN:hover {
-  color: #B22222;
-}
-
-/* Sets the other specific div ellements to be set out the right way*/
-
 
 #locationField {
   width: auto;
@@ -114,8 +135,10 @@ and allow for colour change when hovering over them */
 #locationField {
   flex: 3;
   max-width: 350px;
+	font-size: 20px;
 }
 
 #performSearch {
   flex: 1;
+	font-size: 20px;
 }

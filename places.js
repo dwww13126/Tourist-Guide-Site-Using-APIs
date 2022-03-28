@@ -205,12 +205,12 @@ function showWeather(responseT){
 	//Sets the div to contain the text which shows the weather
 	let weatherMessageDiv = document.getElementById("curWeather");
 	weatherMessageDiv.innerHTML = '';
-	let curH = document.createElement("P");
-	let maxTempH = document.createElement("P");
-	let minTempH = document.createElement("P");
-	let curText;
-	let maxTempText;
-	let minTempText;
+	let curP = document.createElement("P");
+	let maxTempP = document.createElement("P");
+	let minTempP = document.createElement("P");
+	let curText = "Error requesting weather information";
+	let maxTempText = "";
+	let minTempText = "";
 	let maxTempElement = document.getElementById("max-temp");
 	let minTempElement = document.getElementById("min-temp");
 	let curWeatherElement = document.getElementById("curWeather");
@@ -223,35 +223,29 @@ function showWeather(responseT){
 		let wind = xmlWeather.getElementsByTagName("speed")[0].getAttribute("name");
 		let tMin = xmlWeather.getElementsByTagName("temperature")[0].getAttribute("min");
 		let tMax = xmlWeather.getElementsByTagName("temperature")[0].getAttribute("max");
-		//Creates the weather message
-		curText = document.createTextNode("Current weather is " + weather +
-		" and " + wind);
-		maxTempText = document.createTextNode("Max Temp: " + tMax + "°C");
-		minTempText =  document.createTextNode("Max Temp: " + tMin + "°C");
+		//Creates the weather message and formats the text with a capital first followed
+		//by everything else being lower case
+		curText = "<strong>Current Condtion:</strong> " + weather.charAt(0).toUpperCase() + weather.slice(1) +
+							" and " + wind.toLowerCase();
+		maxTempText = "<strong>Max Temp:</strong> " + tMax + "°C";
+		minTempText =  "<strong>Min Temp:</strong> " + tMin + "°C";
 		//Show the location on the map
 		let lat = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lat");
 		let lon = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lon");
 		showOnMap(lat, lon);
 	}
-	//Otherwise let the user know that the weather could not be requested by
-	//altering the curText
-	else {
-		curText = document.createTextNode("Error requesting weather information");
-		maxTempText = document.createTextNode("");
-		minTempText = document.createTextNode("");
-	}
-	//appends the created message to the H tags
-	curH.appendChild(curText);
-	maxTempH.appendChild(maxTempText);
-	minTempH.appendChild(minTempText);
+	//appends the created message to the P tags
+	curP.innerHTML = curText;
+	maxTempP.innerHTML = maxTempText;
+	minTempP.innerHTML = minTempText;
 	//Clears each of the ellements orignal content
 	curWeatherElement.innerHTML = "";
 	maxTempElement.innerHTML = "";
 	minTempElement.innerHTML = "";
-	//Appends the H tags to the relevent ellements on the page
-	curWeatherElement.appendChild(curH);
-	maxTempElement.appendChild(maxTempH);
-	minTempElement.appendChild(minTempH);
+	//Appends the P tags to the relevent ellements on the page
+	curWeatherElement.appendChild(curP);
+	maxTempElement.appendChild(maxTempP);
+	minTempElement.appendChild(minTempP);
 }
 
 //Method used to show the location through the Geocoded data received back from
@@ -286,10 +280,10 @@ function showSunTimes(responseT, townName){
 	let sunTimeDiv = document.getElementById("sunTimes");
 	sunTimeDiv.innerHTML = "";
 	//Creates and adds the message ellement to the sunTimeDiv
-	let sunTimeMessageH = document.createElement("P");
-	let sunText = document.createTextNode("Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
-	sunTimeMessageH.appendChild(sunText);
-	sunTimeDiv.appendChild(sunTimeMessageH);
+	let sunTimeMessageP = document.createElement("P");
+	let sunText = "<strong>Sun Rise / Set:</strong> " + sRiseNZ + "  to " + sSetNZ;
+	sunTimeMessageP.innerHTML = sunText;
+	sunTimeDiv.appendChild(sunTimeMessageP);
 	//Sets the searchbar to townName to fix any spelling mistakes
 	document.getElementById("locationField").value = townName;
 	//Once the location has been added go through and put the recent searches
