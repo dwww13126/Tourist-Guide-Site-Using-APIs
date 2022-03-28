@@ -15,7 +15,7 @@ function locationl(name, lat, lon){
 		let _lat = lat;
 		let _lon = lon;
 		//Creates a clickable dom ellement
-		let locationDom = document.createElement("H3");
+		let locationDom = document.createElement("P");
 		//Allows for the item to have css applied
 		locationDom.className = "locationN";
 		let locationDomMessage = document.createTextNode(_name);
@@ -103,16 +103,18 @@ function geocodeLocation() {
 		let request = "?key=" + mapQuestApiKey + "&inFormat=kvp&outFormat=json&location=" + locationName + "%2C+" + countryCode + "&thumbMaps=false";
 		let wsCall = url + request;
 		//Calls fetch and calls the method to show the location on the map with the parsed JSON
-		fetch(wsCall).then(response => response.json()).then(json => saveLocation(json, locationName));
+		fetch(wsCall).then(response => response.json()).then(json => saveLocation(json));
 	}
 }
 
 //Method used to add a location to the array of locations that the user has
-//not searched up before,
-function saveLocation(jsonGeocode, locationN) {
+//not searched up before
+function saveLocation(jsonGeocode) {
 	//Checks to make sure that the city was found in newZeland by reading the result of the JSON
 	let checkNZ = jsonGeocode.results[0].locations[0].adminArea1;
-	//let checkNZ = "NZ";
+	//Assigns locationN
+	let locationN = jsonGeocode.results[0].locations[0].adminArea5;
+	console.log(jsonGeocode);
 	if (checkNZ.localeCompare("NZ") != 0)
 		//Give a popup message to let the user know that the city name entered does not
 		//exist in new zealand
@@ -131,7 +133,7 @@ function saveLocation(jsonGeocode, locationN) {
 		_selectedLocations.push(location);
 		//Goes through a loop of putting each of the location names on the page
 		let length = _selectedLocations.length;
-		for (let i = 0; i < length; i++) {
+		for (let i = length-1; i >= 0; i--) {
 			recSearchesDiv.appendChild(_selectedLocations[i].getDomElement());
 		}
 		//Calls the weather request using the latitude and longitude from the JSON
@@ -178,9 +180,9 @@ function showWeather(responseT){
 	//Sets the div to contain the text which shows the weather
 	let weatherMessageDiv = document.getElementById("curWeather");
 	weatherMessageDiv.innerHTML = '';
-	let curH = document.createElement("H3");
-	let maxTempH = document.createElement("H3");
-	let minTempH = document.createElement("H3");
+	let curH = document.createElement("P");
+	let maxTempH = document.createElement("P");
+	let minTempH = document.createElement("P");
 	let curText;
 	let maxTempText;
 	let minTempText;
@@ -199,8 +201,8 @@ function showWeather(responseT){
 		//Creates the weather message
 		curText = document.createTextNode("Current weather is " + weather +
 		" with a " + wind);
-		maxTempText = document.createTextNode("Max temp: " + tMax + "°C");
-		minTempText =  document.createTextNode("Max temp: " + tMin + "°C");
+		maxTempText = document.createTextNode("Max Temp: " + tMax + "°C");
+		minTempText =  document.createTextNode("Max Temp: " + tMin + "°C");
 		//Show the location on the map
 		let lat = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lat");
 		let lon = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lon");
@@ -259,7 +261,7 @@ function showSunTimes(responseT, townName){
 	let sunTimeDiv = document.getElementById("sunTimes");
 	sunTimeDiv.innerHTML = "";
 	//Creates and adds the message ellement to the sunTimeDiv
-	let sunTimeMessageH = document.createElement("H3");
+	let sunTimeMessageH = document.createElement("P");
 	let sunText = document.createTextNode(townName + " currently: Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
 	let townText = document.createTextNode(townName);
 	sunTimeMessageH.appendChild(sunText);
