@@ -1,3 +1,7 @@
+body {
+    background-color: #F0F8FF;
+}
+
 div {
     text-indent: 7px;
     margin: 0px;
@@ -6,11 +10,11 @@ div {
 
 .container {
     display: flex;
+    justify-content: center;
 }
 
 .info-grid {
   display: grid;
-  /* Sets up the template for fitting the "Profile:" info */
   grid-template-areas:
           "Search Search Search Search Blank"
           "Map Map Map Map Recent-L"
@@ -19,12 +23,12 @@ div {
           "Cur Cur Cur Max-Temp Max-Temp"
           "Sun Sun Sun Min-Temp Min-Temp";
   grid-template-columns: 200px 200px 200px 200px 200px;
-  grid-template-rows: 40px 40px 180px 180px auto auto;
+  grid-template-rows: 40px 40px 180px 180px 40px 40px;
   grid-gap: 0px;
-  text-align: left;
   font-size: 20px;
   margin: 0px;
   padding: 0px;
+  max-width: 1000px;
 }
 
 .info-grid > div {
@@ -112,15 +116,17 @@ div {
   animation-name: unhighlightAndReturn;
   animation-duration: 0.25s;
 }
+
 /* Sets up the map element for showing the towns searched by the user */
-#mapid { height: auto;
-          width: auto;
-          padding-top: 30px;
-          padding-bottom: 30px;
-          float: left;
-          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-          border-radius: 25px;
-          margin: 8px
+#mapid {
+    height: auto;
+    width: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    float: left;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 25px;
+    margin: 8px;
 }
 
 #locationField {

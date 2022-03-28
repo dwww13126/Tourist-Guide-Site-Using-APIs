@@ -2,6 +2,7 @@
 //Stores the map ellement for allowing locations to be shown by changing cordinates
 let mymap;
 
+//Sets up a XMLHttpRequest for getting the weather data from the API
 let weather = new XMLHttpRequest();
 
 //Allows for the locations that the user enters to be stored in an array
@@ -18,9 +19,10 @@ function locationl(name, lat, lon){
 		let locationDom = document.createElement("P");
 		//Allows for the item to have css applied
 		locationDom.className = "locationN";
+		//Creates a text node with the passed in town name
 		let locationDomMessage = document.createTextNode(_name);
 		locationDom.appendChild(locationDomMessage);
-		//adds an event Listener to the clickable
+		//Adds an event Listener to allow the ellement to clickable
 		locationDom.addEventListener( "click", function() {
 				clickLocation(_lat, _lon, _name);
 		});
@@ -43,7 +45,6 @@ function locationl(name, lat, lon){
 function initializeMap() {
 	//Calls the show on map function using the default location (Hamiton)
 	mymap = L.map('mapid').setView([-37.78, 175.28], 13);
-	// load a tile layer
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 	    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 	    maxZoom: 18,
@@ -54,11 +55,10 @@ function initializeMap() {
 	}).addTo(mymap);
 	//Sets up the location array
 	_selectedLocations = [];
-
-
 }
 
-
+//Checks if there exists a location object inside _selectedLocations which has the same
+//town name, returns the location object if a match is found, null if no match is found
 function findLocation(locationName){
 	//Go through each of the different locations to try find if a  location has prevously
 	//been requested
@@ -67,7 +67,7 @@ function findLocation(locationName){
 		if(_selectedLocations[i].getName().toLowerCase().localeCompare(locationName.toLowerCase()) == 0){
 			//Reorders the location to have it come to the begining of the Recent Searches:
 			reorderLocation(_selectedLocations[i].getName());
-			//Return the location
+			//Return the location object
 			return _selectedLocations[i];
 		}
 		//If no match is found then return null
@@ -75,6 +75,8 @@ function findLocation(locationName){
 	}
 }
 
+//Edits the array of location objects to have a location which has been clicked
+//or searched before to become first in the displayed ordering
 function reorderLocation(locationName){
 	//Go through each of the different locations to try find if a location has
 	//is already in the recents list
@@ -91,7 +93,8 @@ function reorderLocation(locationName){
 			return true;
 		}
 	}
-	//Return false to say no reorder was required
+	//Return false as there does not exist a _selectedLocations with
+	//the same locationName
 	return false;
 }
 
@@ -106,41 +109,47 @@ function geocodeLocation() {
 	locationName = locationName.replace(/\s\s+/g, ' ');
 	locationName = locationName.trim();
 	//Calls the findLocation method and checks to see if the value returned is not
-	//null (Value is found), if location is found then pass the location parmeters
+	//null (Value is found)
 	let foundLocation = findLocation(locationName);
 	if (foundLocation != null){
-		//then request the weather using the foundLocation without requesting
-		//the mapquestapi geocode
+		//Request the weather using the foundLocation location data without
+		//requesting the mapquestapi geocode
 		requestWeather(foundLocation.getLatitude(), foundLocation.getLongitude());
 	}
 	//Else try request the location with mapquestapi
 	else {
-		//Is the API key used to be able to
 		let mapQuestApiKey = "YourAPIKey";
-		//By default the country code used is NZ due to
+		//By default the country code used is NZ to get places from NZ
 		let countryCode = "NZ";
-		//set up the endpoint for the request with the required parameters
+		//Set up the request with the required parameters
 		let url = "https://www.mapquestapi.com/geocoding/v1/address";
 		let request = "?key=" + mapQuestApiKey + "&inFormat=kvp&outFormat=json&location=" + locationName + "%2C+" + countryCode + "&thumbMaps=false";
 		let wsCall = url + request;
-		//Calls fetch and calls the method to show the location on the map with the parsed JSON
+		//Calls fetch and sets up the callback method to show the location on the
+		//map with the parsed JSON
 		fetch(wsCall).then(response => response.json()).then(json => saveLocation(json));
 	}
 }
 
-//Method used to add a location to the array of locations that the user has
+//Used to add a location to the array of locations that the user has
 //not searched up before
 function saveLocation(jsonGeocode) {
-	//Checks to make sure that the city was found in newZeland by reading the result of the JSON
+	//Checks to make sure that the city was found in New Zeland by reading the
+	//result of the JSON
 	let checkNZ = jsonGeocode.results[0].locations[0].adminArea1;
-	//Assigns locationN
+	//Assigns the location Name
 	let locationN = jsonGeocode.results[0].locations[0].adminArea5;
-	console.log(jsonGeocode);
-	if (checkNZ.localeCompare("NZ") != 0)
+	if (checkNZ.localeCompare("NZ") != 0) {
 		//Give a popup message to let the user know that the city name entered does not
-		//exist in new zealand
+		//exist in New Zealand
 		window.alert("Requested Town is not located in New Zealand");
-	//Else create
+		//Removes all the text from curWeather, sunTimes, max-temp and min-temp divs
+		document.getElementById("curWeather").innerHTML = "";
+		document.getElementById("sunTimes").innerHTML = "";
+		document.getElementById("max-temp").innerHTML = "";
+		document.getElementById("min-temp").innerHTML = "";
+	}
+	//Else create a location object
 	else {
 		//Reads the data from the JSON to be used in creating a new location object
 		let gLatitude = jsonGeocode.results[0].locations[0].latLng.lat;
@@ -153,10 +162,9 @@ function saveLocation(jsonGeocode) {
 			 //removes the oldest ellement
 		  _selectedLocations = _selectedLocations.slice(1, 7);
 		}
-		//Brings a duplicate location to the latest search if it exists
-		let reOrdered = reorderLocation(locationN);
-		//If reOrdered if false (Meaning that the locationN is new) then add the
+		//If reOrdered is false (Meaning that the locationN is new) then add the
 		//location to _selectedLocations
+		let reOrdered = reorderLocation(locationN);
 		if(!reOrdered){
 			_selectedLocations.push(location);
 		}
@@ -167,7 +175,9 @@ function saveLocation(jsonGeocode) {
 	}
 }
 
-//
+//Allows for a user to click on a town from thier recent searches
+//and reorder the locations before performing the requestWeather
+//and requestSunTimes API requests
 function clickLocation(latitude, longitude, locationN) {
 	reorderLocation(locationN);
 	//Calls the weather request using the latitude and longitude
@@ -197,7 +207,7 @@ function updateInfo() {
   }
 }
 
-//Is the callback used to display the weather to the user
+//Is the callback used to display the weather to the user, uses a XML response
 function showWeather(responseT){
 	//Stores the responceXML
 	var parser = new DOMParser();
@@ -234,7 +244,7 @@ function showWeather(responseT){
 		let lon = xmlWeather.getElementsByTagName("coord")[0].getAttribute("lon");
 		showOnMap(lat, lon);
 	}
-	//appends the created message to the P tags
+	//Assigns the created messages to the P tags
 	curP.innerHTML = curText;
 	maxTempP.innerHTML = maxTempText;
 	minTempP.innerHTML = minTempText;
@@ -248,14 +258,14 @@ function showWeather(responseT){
 	minTempElement.appendChild(minTempP);
 }
 
-//Method used to show the location through the Geocoded data received back from
+//Used to show the location through the Geocoded data received back from
 //the geocode location or locationObject
 function showOnMap(latitude, longitude){
 	//Uses the passed in latitude, longitude to set the location of the map
 	mymap.setView([latitude, longitude], 13);
 }
 
-//Is a method which allows for the sunrise sunset to be requested by latitude and longitude
+//Allows for the sunrise sunset to be requested by latitude and longitude
 //using Fetch and cURL
 function requestSunTimes(latitude, longitude, locationN) {
 	//Runs the fetch request to find the SunTimes for the current day by using a server side script
@@ -264,7 +274,7 @@ function requestSunTimes(latitude, longitude, locationN) {
 
 //Uses what is returned to display the sun Set and Rise times on the page
 function showSunTimes(responseT, townName){
-	//Stores each of the diverent parts used in creating the sunText message
+	//Stores each of the diferent parts used in creating the sunText message
 	//from reading the response text
 	let sRiseUTC = responseT.results.sunrise;
 	let sSetUTC = responseT.results.sunset;
@@ -284,9 +294,11 @@ function showSunTimes(responseT, townName){
 	let sunText = "<strong>Sun Rise / Set:</strong> " + sRiseNZ + "  to " + sSetNZ;
 	sunTimeMessageP.innerHTML = sunText;
 	sunTimeDiv.appendChild(sunTimeMessageP);
-	//Sets the searchbar to townName to fix any spelling mistakes
+	//Sets the searchbar to the API souced townName to fix any spelling mistakes
+	//a user might have made entering the town
 	document.getElementById("locationField").value = townName;
-	//Once the location has been added go through and put the recent searches
+	//Once the location has been added go through and put the recent searches on
+	//the page
 	let recSearchesDiv = document.getElementById("recSearch");
 	recSearchesDiv.innerHTML = '';
 	//Goes through a loop of putting each of the location names on the page
