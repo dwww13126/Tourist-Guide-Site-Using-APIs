@@ -62,16 +62,37 @@ function initializeMap() {
 function findLocation(locationName){
 	//Go through each of the different locations to try find if a  location has prevously
 	//been requested
-	let length = _selectedLocations.length;
-	for (let i = 0; i < length; i++) {
+	for (let i = 0; i < _selectedLocations.length; i++) {
 		//If there already exsists a location with the same name
-		if(_selectedLocations[i].getName().toLowerCase().localeCompare(locationName) == 0){
+		if(_selectedLocations[i].getName().toLowerCase().localeCompare(locationName.toLowerCase()) == 0){
+			//Reorders the location to have it come to the begining of the Recent Searches:
+			reorderLocation(_selectedLocations[i].getName());
 			//Return the location
 			return _selectedLocations[i];
 		}
 		//If no match is found then return null
 		return null;
 	}
+}
+
+function reorderLocation(locationName){
+	//Go through each of the different locations to try find if a location has
+	//is already in the recents list
+	for (let i = 0; i < _selectedLocations.length; i++) {
+		//If there already exsists a location with the same name
+		if(_selectedLocations[i].getName().localeCompare(locationName) == 0){
+			//Makes a copy of the location for adding back as the newest
+			let duplicate = _selectedLocations[i];
+			//Spices the _selectedLocations array to remove the duplicate
+			_selectedLocations.splice(i, 1);
+			//Adds the dupicate back
+			_selectedLocations.push(duplicate);
+			//Return true to say re-order occured
+			return true;
+		}
+	}
+	//Return false to say no reorder was required
+	return false;
 }
 
 //Uses fetch to request the geocoding data of an entered location
@@ -90,7 +111,7 @@ function geocodeLocation() {
 	if (foundLocation != null){
 		//then request the weather using the foundLocation without requesting
 		//the mapquestapi geocode
-		requestWeather(foundLocation.getLatitude(), foundLocation.getLongitude(), locationName);
+		requestWeather(foundLocation.getLatitude(), foundLocation.getLongitude());
 	}
 	//Else try request the location with mapquestapi
 	else {
@@ -121,9 +142,6 @@ function saveLocation(jsonGeocode) {
 		window.alert("Requested Town is not located in New Zealand");
 	//Else create
 	else {
-		//Once the location has been added go through and put the
-		let recSearchesDiv = document.getElementById("recSearch");
-		recSearchesDiv.innerHTML = '';
 		//Reads the data from the JSON to be used in creating a new location object
 		let gLatitude = jsonGeocode.results[0].locations[0].latLng.lat;
 		let gLongitude = jsonGeocode.results[0].locations[0].latLng.lng;
@@ -135,11 +153,12 @@ function saveLocation(jsonGeocode) {
 			 //removes the oldest ellement
 		  _selectedLocations = _selectedLocations.slice(1, 7);
 		}
-		//Adds the location to the locations array
-		_selectedLocations.push(location);
-		//Goes through a loop of putting each of the location names on the page
-		for (let i = _selectedLocations.length - 1; i >= 0; i--) {
-			recSearchesDiv.appendChild(_selectedLocations[i].getDomElement());
+		//Brings a duplicate location to the latest search if it exists
+		let reOrdered = reorderLocation(locationN);
+		//If reOrdered if false (Meaning that the locationN is new) then add the
+		//location to _selectedLocations
+		if(!reOrdered){
+			_selectedLocations.push(location);
 		}
 		//Calls the weather request using the latitude and longitude from the JSON
 		requestWeather(gLatitude, gLongitude);
@@ -150,6 +169,7 @@ function saveLocation(jsonGeocode) {
 
 //
 function clickLocation(latitude, longitude, locationN) {
+	reorderLocation(locationN);
 	//Calls the weather request using the latitude and longitude
 	requestWeather(latitude, longitude);
 	//Requests the sun times using the passed lat lon and the location name
@@ -205,7 +225,7 @@ function showWeather(responseT){
 		let tMax = xmlWeather.getElementsByTagName("temperature")[0].getAttribute("max");
 		//Creates the weather message
 		curText = document.createTextNode("Current weather is " + weather +
-		" with a " + wind);
+		" and " + wind);
 		maxTempText = document.createTextNode("Max Temp: " + tMax + "°C");
 		minTempText =  document.createTextNode("Max Temp: " + tMin + "°C");
 		//Show the location on the map
@@ -267,8 +287,16 @@ function showSunTimes(responseT, townName){
 	sunTimeDiv.innerHTML = "";
 	//Creates and adds the message ellement to the sunTimeDiv
 	let sunTimeMessageH = document.createElement("P");
-	let sunText = document.createTextNode(townName + " currently: Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
-	let townText = document.createTextNode(townName);
+	let sunText = document.createTextNode("Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
 	sunTimeMessageH.appendChild(sunText);
 	sunTimeDiv.appendChild(sunTimeMessageH);
+	//Sets the searchbar to townName to fix any spelling mistakes
+	document.getElementById("locationField").value = townName;
+	//Once the location has been added go through and put the recent searches
+	let recSearchesDiv = document.getElementById("recSearch");
+	recSearchesDiv.innerHTML = '';
+	//Goes through a loop of putting each of the location names on the page
+	for (let i = _selectedLocations.length - 1; i >= 0; i--) {
+		recSearchesDiv.appendChild(_selectedLocations[i].getDomElement());
+	}
 }
