@@ -11,8 +11,8 @@
           "Map Map Map Map Recent-L"
           "Map Map Map Map Recent"
           "Map Map Map Map Recent"
-          "Max-Temp Cur Cur Cur Cur"
-          "Min-Temp Sun Sun Sun Sun";
+          "Sun Sun Sun Sun Max-Temp"
+          "Cur Cur Cur Cur Min-Temp";
   grid-template-columns: 200px 200px 200px 200px 200px;
   grid-template-rows: 40px 40px 180px 180px auto auto;
   grid-gap: 0px;

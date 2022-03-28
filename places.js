@@ -129,11 +129,16 @@ function saveLocation(jsonGeocode) {
 		let gLongitude = jsonGeocode.results[0].locations[0].latLng.lng;
 		//Creates the location object used passed in parmeters
 		let location = new locationl(locationN, gLatitude, gLongitude);
+		//Otherwise checks the length of the _selectedLocations array
+		//to see if it has reached the max length of 7
+		if(_selectedLocations.length == 7){
+			 //removes the oldest ellement
+		  _selectedLocations = _selectedLocations.slice(1, 7);
+		}
 		//Adds the location to the locations array
 		_selectedLocations.push(location);
 		//Goes through a loop of putting each of the location names on the page
-		let length = _selectedLocations.length;
-		for (let i = length-1; i >= 0; i--) {
+		for (let i = _selectedLocations.length - 1; i >= 0; i--) {
 			recSearchesDiv.appendChild(_selectedLocations[i].getDomElement());
 		}
 		//Calls the weather request using the latitude and longitude from the JSON
