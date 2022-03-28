@@ -255,18 +255,13 @@ function showSunTimes(responseT, townName){
 	//Deletes the irrelevent parts of the date to only show the time with AM / PM
 	let sRiseNZ = nzDateRise.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 	let sSetNZ = nzDateSet.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-	//Gets the sunTimes and title divs which needs to be updated and clears them
+	//Gets the sunTimes div which needs to be updated and clear it
 	let sunTimeDiv = document.getElementById("sunTimes");
-	let titleDiv = document.getElementById("title");
 	sunTimeDiv.innerHTML = "";
-	titleDiv.innerHTML = "";
-	//Creates and adds the message ellement to the sunTimeDiv and titleDiv
+	//Creates and adds the message ellement to the sunTimeDiv
 	let sunTimeMessageH = document.createElement("H3");
-	let townTitleH = document.createElement("H2");
 	let sunText = document.createTextNode(townName + " currently: Sun rises at " + sRiseNZ + " and sets at " + sSetNZ);
 	let townText = document.createTextNode(townName);
 	sunTimeMessageH.appendChild(sunText);
-	townTitleH.appendChild(townText);
 	sunTimeDiv.appendChild(sunTimeMessageH);
-	titleDiv.appendChild(townTitleH);
 }

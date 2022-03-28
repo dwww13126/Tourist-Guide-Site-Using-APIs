@@ -1,20 +1,20 @@
+
 .container {
-  display: flex;
-  justify-content: left;
+    display: flex;
 }
 
 .info-grid {
   display: grid;
   /* Sets up the template for fitting the "Profile:" info */
   grid-template-areas:
-          "Search Search Search Title Title"
-          "Cur Cur Cur Cur Max-Temp"
-          "Sun Sun Sun Sun Min-Temp"
+          "Search Search Search Search Blank"
           "Map Map Map Map Recent-L"
           "Map Map Map Map Recent"
-          "Map Map Map Map Recent";
+          "Map Map Map Map Recent"
+          "Max-Temp Cur Cur Cur Cur"
+          "Min-Temp Sun Sun Sun Sun";
   grid-template-columns: 200px 200px 200px 200px 200px;
-  grid-template-rows: auto auto auto 40px 180px 180px;
+  grid-template-rows: 40px 40px 180px 180px auto auto;
   grid-gap: 0px;
   text-align: left;
   font-size: 20px;
@@ -22,52 +22,55 @@
   padding: 0px;
 }
 
-.title {
-  grid-area: Title;
+.info-grid > div {
+  display: flex;
+  align-items: center;
 }
 
 .search {
   grid-area: Search;
+  height: 40px;
+  justify-content: center;
 }
 
 .cur {
   grid-area: Cur;
+  justify-content: flex-start;
 }
 
 
 .max-temp {
   grid-area: Max-Temp;
+  justify-content: flex-start;
 }
 
 .sun {
   grid-area: Sun;
+  justify-content: flex-start;
 }
 
 .min-temp {
   grid-area: Min-Temp;
+  justify-content: flex-start;
 }
 
 .map {
   grid-area: Map;
-  display: flex;
 }
 
 .recent-L {
   grid-area: Recent-L;
+  justify-content: flex-start;
 }
 
-.recent {
+.info-grid > .recent {
   grid-area: Recent;
-}
-
-#locationField {
-  width: auto;
+  display: block;
 }
 
 /* Sets the font of the places app  */
-body {
-    font: 100% arial, sans-serif;
-
+p {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Sets up the map element */
@@ -84,7 +87,6 @@ body {
 div {
     text-indent: 7px;
     margin: 0px;
-    float: left;
 }
 
 /* Sets the prevous city names to different to allow for them stand out
@@ -99,11 +101,21 @@ and allow for colour change when hovering over them */
 
 /* Sets the other specific div ellements to be set out the right way*/
 
-div#userInput {
-  display: block;
+
+#locationField {
+  width: auto;
 }
 
-div#search {
-  display: block;
-  float: none;
+#userInput {
+  display: flex;
+  grid-column-gap: 2px;
+}
+
+#locationField {
+  flex: 3;
+  max-width: 350px;
+}
+
+#performSearch {
+  flex: 1;
 }
