@@ -1,3 +1,5 @@
+//The API key for showing the town location on the map
+let mapQuestApiKey = "YourAPIKey";
 
 //Stores the map ellement for allowing locations to be shown by changing cordinates
 let mymap;
@@ -118,7 +120,6 @@ function geocodeLocation() {
 	}
 	//Else try request the location with mapquestapi
 	else {
-		let mapQuestApiKey = "YourAPIKey";
 		//By default the country code used is NZ to get places from NZ
 		let countryCode = "NZ";
 		//Set up the request with the required parameters
